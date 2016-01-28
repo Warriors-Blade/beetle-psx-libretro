@@ -515,7 +515,9 @@ int32_t PS_CPU::RunReal(int32_t timestamp_in)
             if(PC >= 0xA0000000 || !(BIU & 0x800))
             {
                instr = LoadU32_LE((uint32_t *)&FastMap[PC >> FAST_MAP_SHIFT][PC]);
-               timestamp += 4;	// Approximate best-case cache-disabled time, per PS1 tests(executing out of 0xA0000000+); it can be 5 in *some* sequences of code(like a lot of sequential "nop"s, probably other simple instructions too).
+	       // Overclock: remove uncached code latency
+               //timestamp += 4;
+	       // Approximate best-case cache-disabled time, per PS1 tests(executing out of 0xA0000000+); it can be 5 in *some* sequences of code(like a lot of sequential "nop"s, probably other simple instructions too).
             }
             else
             {
@@ -528,24 +530,25 @@ int32_t PS_CPU::RunReal(int32_t timestamp_in)
                ICI[0x02].TV = (PC &~ 0xF) | 0x08 | 0x2;
                ICI[0x03].TV = (PC &~ 0xF) | 0x0C | 0x2;
 
-               timestamp += 3;
+	       // Overclock: remove code cache fetch latency
+               //timestamp += 3;
 
                switch(PC & 0xC)
                {
                   case 0x0:
-                     timestamp++;
+		    //timestamp++;
                      ICI[0x00].TV &= ~0x2;
                      ICI[0x00].Data = LoadU32_LE(&FMP[0]);
                   case 0x4:
-                     timestamp++;
+		    //timestamp++;
                      ICI[0x01].TV &= ~0x2;
                      ICI[0x01].Data = LoadU32_LE(&FMP[1]);
                   case 0x8:
-                     timestamp++;
+		    //timestamp++;
                      ICI[0x02].TV &= ~0x2;
                      ICI[0x02].Data = LoadU32_LE(&FMP[2]);
                   case 0xC:
-                     timestamp++;
+		    //timestamp++;
                      ICI[0x03].TV &= ~0x2;
                      ICI[0x03].Data = LoadU32_LE(&FMP[3]);
                      break;

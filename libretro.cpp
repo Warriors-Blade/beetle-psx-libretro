@@ -435,7 +435,8 @@ template<typename T, bool IsWrite, bool Access24> static INLINE void MemRW(int32
       }
       else
       {
-         timestamp += 3;
+	// Overclock: get rid of memory access latency
+	//timestamp += 3;
       }
 
       if(Access24)

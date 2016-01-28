@@ -1677,6 +1677,9 @@ int32_t GTE_Instruction(uint32_t instr)
          break;
    }
 
+   // Overclock: force all GTE instruction to have 1 cycle latency
+   ret = 1;
+
    if(FLAGS & 0x7f87e000)
       FLAGS |= 1 << 31;
 
